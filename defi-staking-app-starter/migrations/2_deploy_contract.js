@@ -12,9 +12,18 @@ module.exports = async function(deployer, network, accounts) {
     const rwd = await RWD.deployed();
 
     // Deploy DecentralBank Contract
-    await deployer.deploy(DecentralBank);
+    await deployer.deploy(DecentralBank, rwd.address, tether.address);
     const decentralBank = await DecentralBank.deployed();
 
-    await rwd.transfer(DecentralBank.address,'1000000000000000000');
-    
+    // Million  1000000 000000000000000000
+    // Thousand 1000    000000000000000000
+    // Hundred  100     000000000000000000
+    // Ten      10      000000000000000000
+    // One      1       000000000000000000
+
+    // starting with 1 Million tokens
+    await rwd.transfer(decentralBank.address,'1000000000000000000000000');
+
+    // transfering 100 tokens
+    await tether.transfer(accounts[1], '100000000000000000000');
 };
