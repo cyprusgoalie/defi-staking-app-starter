@@ -56,6 +56,17 @@ contract ('DecentralBank', ([owner, customer]) => {
             assert.equal(balance, tokens('1000000'))
         })
     })
+
+    describe('Yield Farming', async () => {
+        it('rewards tokens for staking', async () => {
+            let result
+
+            // Check Inverstor Balance
+            result = await tether.balanceOf(customer)
+            assert.equal(result.toString(),tokens('100'), 'customer mock tether balance before staking')
+        })
+
+    })
     
     
     // describe('Mock Tether Deployment', async () => {
