@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-contract Tether {
-    string public name = 'Mock Tether Token';
-    string public symbol = 'mUSDT';
+contract RWD {
+    string public name = 'Reward Token';
+    string public symbol = 'RWD';
     uint256 public totalSupply = 1000000000000000000000000; // 1 million tokens
     uint8 public decimals = 18;
 
@@ -22,7 +22,7 @@ contract Tether {
     mapping(address => uint) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
 
-    constructor()  {
+    constructor() {
         balanceOf[msg.sender] = totalSupply;
     }
 
