@@ -58,15 +58,98 @@ contract ('DecentralBank', ([owner, customer]) => {
     })
 
     describe('Yield Farming', async () => {
-        it('rewards tokens for staking', async () => {
+        it('Customer balance before staking is 100', async () => {
             let result
 
             // Check Inverstor Balance
             result = await tether.balanceOf(customer)
             assert.equal(result.toString(),tokens('100'), 'customer mock tether balance before staking')
+            // the customer has a balance of 100 tokens
+            console.log('Customer balance')
+            console.log(web3.utils.fromWei(result.toString()))
         })
 
+        it('Approve tokens and deposit to bank', async () => {
+            let result
+
+            // now approving the move of 100 tokens
+            await tether.approve(decentralBank.address, tokens('100'), {from: customer})
+
+            // depositing the 100 tokens to the bank
+            await decentralBank.depositTokens(tokens('100'), {from: customer})
+
+            // Check updated balance of customer
+
+            result = await tether.balanceOf(customer)
+            assert.equal(result.toString(),tokens('0'), 'customer mock tether balance after staking')
+        })
+
+
+        it('Check bank balance and if customer is staked', async () => {
+            let result
+
+            // Check updated balance of customer
+            result = await tether.balanceOf(decentralBank.address)
+            assert.equal(result.toString(),tokens('100'), 'decentral bank mock tether balance after staking')
+
+            //Is Staking Balance
+            result = await decentralBank.isStaking(customer)
+            assert.equal(result.toString(), 'true', 'customer isStaking status after staking')
+        })
     })
+
+    describe('Yield Farming', async () => {
+        it('Customer balance before staking is 100', async () => {
+            let result
+
+            // Check Inverstor Balance
+            result = await tether.balanceOf(customer)
+            assert.equal(result.toString(),tokens('100'), 'customer mock tether balance before staking')
+            // the customer has a balance of 100 tokens
+            console.log('Customer balance')
+            console.log(web3.utils.fromWei(result.toString()))
+        })
+
+        it('Approve tokens and deposit to bank', async () => {
+            let result
+
+            // now approving the move of 100 tokens
+            await tether.approve(decentralBank.address, tokens('100'), {from: customer})
+
+            // depositing the 100 tokens to the bank
+            await decentralBank.depositTokens(tokens('100'), {from: customer})
+
+            // Check updated balance of customer
+
+            result = await tether.balanceOf(customer)
+            assert.equal(result.toString(),tokens('0'), 'customer mock tether balance after staking')
+        })
+
+
+        it('Check bank balance and if customer is staked', async () => {
+            let result
+
+            // Check updated balance of customer
+            result = await tether.balanceOf(decentralBank.address)
+            assert.equal(result.toString(),tokens('100'), 'decentral bank mock tether balance after staking')
+
+            //Is Staking Balance
+            result = await decentralBank.isStaking(customer)
+            assert.equal(result.toString(), 'true', 'customer isStaking status after staking')
+        })
+
+        it('Issue token test', async () => {
+            let result
+
+            await decentralBank.issueTokens({from: owner})
+
+            // ensure only the owner can issue tokens
+            await decentralBank.issueTokens({from: customer}).should.be.rejected;
+
+        })
+    })
+
+    
     
     
     // describe('Mock Tether Deployment', async () => {
