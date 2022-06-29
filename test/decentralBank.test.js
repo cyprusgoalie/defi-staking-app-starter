@@ -69,59 +69,25 @@ contract ('DecentralBank', ([owner, customer]) => {
             console.log(web3.utils.fromWei(result.toString()))
         })
 
-        it('Approve tokens and deposit to bank', async () => {
+        it('Approve 100 tokens and transfer them from customer to bank', async () => {
             let result
 
-            // now approving the move of 100 tokens
-            await tether.approve(decentralBank.address, tokens('100'), {from: customer})
+            // approving the move of 100 tokens from the customer to the decentral bank
+            result = await tether.approve(decentralBank.address, tokens('100'), {from: customer})
 
-            // depositing the 100 tokens to the bank
-            await decentralBank.depositTokens(tokens('100'), {from: customer})
-
-            // Check updated balance of customer
-
+            // getting and logging the current balance of mock Tether tokens of the customer's account
             result = await tether.balanceOf(customer)
-            assert.equal(result.toString(),tokens('0'), 'customer mock tether balance after staking')
-        })
-
-
-        it('Check bank balance and if customer is staked', async () => {
-            let result
-
-            // Check updated balance of customer
-            result = await tether.balanceOf(decentralBank.address)
-            assert.equal(result.toString(),tokens('100'), 'decentral bank mock tether balance after staking')
-
-            //Is Staking Balance
-            result = await decentralBank.isStaking(customer)
-            assert.equal(result.toString(), 'true', 'customer isStaking status after staking')
-        })
-    })
-
-    describe('Yield Farming', async () => {
-        it('Customer balance before staking is 100', async () => {
-            let result
-
-            // Check Inverstor Balance
-            result = await tether.balanceOf(customer)
-            assert.equal(result.toString(),tokens('100'), 'customer mock tether balance before staking')
-            // the customer has a balance of 100 tokens
-            console.log('Customer balance')
+            console.log('Customer Balance')
             console.log(web3.utils.fromWei(result.toString()))
-        })
 
-        it('Approve tokens and deposit to bank', async () => {
-            let result
-
-            // now approving the move of 100 tokens
-            await tether.approve(decentralBank.address, tokens('100'), {from: customer})
-
-            // depositing the 100 tokens to the bank
+            // // depositing the 100 mock Tether tokens to the bank
+            console.log('Deposit tokens')
             await decentralBank.depositTokens(tokens('100'), {from: customer})
 
-            // Check updated balance of customer
-
+            // // Check updated balance of customer
             result = await tether.balanceOf(customer)
+            console.log('Customer Balance')
+            console.log(web3.utils.fromWei(result.toString()))
             assert.equal(result.toString(),tokens('0'), 'customer mock tether balance after staking')
         })
 
@@ -129,7 +95,7 @@ contract ('DecentralBank', ([owner, customer]) => {
         it('Check bank balance and if customer is staked', async () => {
             let result
 
-            // Check updated balance of customer
+            // Check updated balance of bank
             result = await tether.balanceOf(decentralBank.address)
             assert.equal(result.toString(),tokens('100'), 'decentral bank mock tether balance after staking')
 
@@ -141,6 +107,7 @@ contract ('DecentralBank', ([owner, customer]) => {
         it('Issue token test', async () => {
             let result
 
+            // issue tokens to the owner
             await decentralBank.issueTokens({from: owner})
 
             // ensure only the owner can issue tokens
@@ -148,29 +115,4 @@ contract ('DecentralBank', ([owner, customer]) => {
 
         })
     })
-
-    
-    
-    
-    // describe('Mock Tether Deployment', async () => {
-    //     it('matches name successfully', async () => {
-    //         let tether = await Tether.new()
-    //         const name = await tether.name()
-    //         assert.equal(name,'Mock Tether Token')
-    //     })
-    // })
-
-    // describe('Reward Token', async () => {
-    //     it('matches name successfully', async () => {
-    //         let reward = await RWD.new()
-    //         const name = await reward.name()
-    //         assert.equal(name,'Reward Token')
-    //     })
-
-    //     it('symbol name successfully', async () => {
-    //         let reward = await RWD.new()
-    //         const symbol = await reward.symbol()
-    //         assert.equal(symbol,'RWD')
-    //     })
-    // })
 })
