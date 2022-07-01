@@ -90,6 +90,19 @@ class App extends Component
         this.setState({loading: false})
     }
 
+    // two functions: one that stakes and one that unstakes -
+    // leverage our decentralBank contract - deposit tokens and unstaking
+
+
+    // staking function
+    stakeTokens = (amount) => {
+        this.setState({loading: true})
+        this.state.tether.methods.approve(this.state.decentralBank._address, amount).send({from: this.state.account}).on('transactionHash', (hash) => {})
+        this.state.decentralBank.methods.depositTokens(amount).send({from: this.state.account}).on('transactionHash', (hash) => {
+            this.setState({loading: false})
+        })
+    }
+
     constructor(props)
     {
         super(props)
@@ -109,6 +122,14 @@ class App extends Component
     // Our React Code Goes In Here!
     render()
     {
+        let content
+        {this.state.loading ? content = <p id='loader' className = 'text-center' style = {{margin:'30px'}}>LOADING...PLEASE WAIT</p> : content = 
+        <Main
+        tetherBalance={this.state.tetherBalance}
+        rwdBalance={this.state.rwdBalance}
+        stakingBalance={this.state.stakingBalance}
+        stakeTokens = {this.stakeTokens}
+        />}
         return (
             <div>
                 <Navbar account={this.state.account}/>
@@ -116,7 +137,7 @@ class App extends Component
                         <div className='row'>
                             <main role='main' className = 'col-lg-12 ml-auto mr-auto' style = {{maxWidth:'600px', minHeight:'100vm'}}>
                                 <div>
-                                    <Main/>
+                                    {content}
                                 </div>
                             </main>
                         </div>
